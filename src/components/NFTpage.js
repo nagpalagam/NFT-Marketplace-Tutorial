@@ -71,23 +71,32 @@ export default function NFTPage() {
       const ethers = require("ethers");
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
-
+      const addr = await signer.getAddress(); // Get current address of the buyer
+  
       let contract = new ethers.Contract(CONTRACT_ADDRESS, MarketplaceJSON.abi, signer);
       const salePrice = ethers.utils.parseUnits(data.price, "ether");
-
+  
+      // Fetch the current owner of the token
+      const tokenOwner = await contract.ownerOf(tokenId);
+      
+      // Check if the buyer is the current owner or not
+      if (addr === tokenOwner) {
+        throw new Error("You already own this NFT!");
+      }
+  
       updateMessage("Buying the NFT... Please Wait (Up to 5 mins)");
-
-      // Run the executeSale function
+  
+      // Execute the sale
       let transaction = await contract.executeSale(tokenId, { value: salePrice });
       await transaction.wait();
-
+  
       alert("You successfully bought the NFT!");
       updateMessage("");
     } catch (e) {
-      alert("Error: " + e);
+      alert("Error: " + e.message || e);
     }
   }
-
+  
   // Fetch data once when the page loads
   useEffect(() => {
     if (tokenId && !dataFetched) {

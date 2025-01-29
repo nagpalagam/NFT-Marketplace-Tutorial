@@ -1,0 +1,8 @@
+{
+  "mainnet": {
+    "NFT-MARKETPLACE": {
+      "address": "0x6AeD57D577542A04646eA9b1780adB6288768242",
+      "startBlock": 0
+    }
+  }
+}

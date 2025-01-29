@@ -1,0 +1,35 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: NFT-MARKETPLACE
+    network: mainnet
+    source:
+      address: "0x6AeD57D577542A04646eA9b1780adB6288768242"
+      abi: NFT-MARKETPLACE
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - ApprovalForAll
+        - TokenListedSuccess
+        - Transfer
+      abis:
+        - name: NFT-MARKETPLACE
+          file: ./abis/NFT-MARKETPLACE.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: TokenListedSuccess(indexed uint256,address,address,uint256,bool)
+          handler: handleTokenListedSuccess
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/nft-marketplace.ts
