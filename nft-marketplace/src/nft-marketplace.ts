@@ -3,7 +3,7 @@ import {
   ApprovalForAll as ApprovalForAllEvent,
   TokenListedSuccess as TokenListedSuccessEvent,
   Transfer as TransferEvent
-} from "../generated/NFT-MARKETPLACE/NFT-MARKETPLACE"
+} from "../generated/NFT-MARKETPLACE/NFT_MARKETPLACE"
 import {
   Approval,
   ApprovalForAll,

@@ -6,7 +6,7 @@ schema:
 dataSources:
   - kind: ethereum
     name: NFT-MARKETPLACE
-    network: mainnet
+    network: sepolia
     source:
       address: "0x6AeD57D577542A04646eA9b1780adB6288768242"
       abi: NFT-MARKETPLACE
