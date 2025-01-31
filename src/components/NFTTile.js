@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 function NFTTile({ data }) {
-  const { tokenId, image, name, description, price } = data || {};
+  const { tokenId, image, name, description, price, owner, seller } = data || {};
   const newTo = { pathname: `/nftPage/${tokenId}` };
 
   if (!data) {
@@ -28,6 +28,16 @@ function NFTTile({ data }) {
             {description || "No description available"}
           </p>
           <p className="text-yellow-400">{price || "Price Not Listed"}</p>
+          <div className="relative w-full mt-2 text-xs text-gray-300 px-2">
+  <div className="border-t border-gray-500 pt-2">
+    <p className="flex justify-between">
+      <strong>Owner:</strong> <span className="break-all text-right">{owner || "Unknown"}</span>
+    </p>
+    <p className="flex justify-between">
+      <strong>Seller:</strong> <span className="break-all text-right">{seller || "Unknown"}</span>
+    </p>
+  </div>
+</div>
         </div>
       </div>
     </Link>

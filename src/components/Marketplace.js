@@ -7,8 +7,7 @@ import { GetIpfsUrlFromPinata } from "../utils";
 
 export default function Marketplace() {
     const [data, updateData] = useState([]);
-    // Hardcode the contract address (you can replace this with a dynamic source if needed)
-    const contractAddress = "0x6AeD57D577542A04646eA9b1780adB6288768242";
+    const contractAddress = "0x6AeD57D577542A04646eA9b1780adB6288768242"; // Hardcoded contract address
 
     const ethers = require("ethers");
 
@@ -22,7 +21,7 @@ export default function Marketplace() {
     // Contract instantiation with dynamic address
     const contract = useMemo(() => {
         if (!provider) return null;
-        return new ethers.Contract(contractAddress, MarketplaceJSON.abi, provider); // Use contractAddress here
+        return new ethers.Contract(contractAddress, MarketplaceJSON.abi, provider);
     }, [provider, contractAddress, ethers.Contract]);
 
     // Function to get all NFTs
@@ -38,7 +37,7 @@ export default function Marketplace() {
                         const tokenId = i.tokenId.toNumber();
                         let tokenURI = await contractWithSigner.tokenURI(tokenId);
                         
-                        // Check if the tokenURI is valid (i.e., not "0x" or empty)
+                        // Check if the tokenURI is valid
                         if (!tokenURI || tokenURI === "0x") {
                             throw new Error(`Invalid or missing tokenURI for tokenId: ${tokenId}`);
                         }
@@ -59,8 +58,8 @@ export default function Marketplace() {
                         return {
                             price,
                             tokenId,
-                            seller: i.seller,
-                            owner: i.owner,
+                            seller: i.seller, // Ensure seller is included
+                            owner: i.owner,   // Ensure owner is included
                             image: meta.image,
                             name: meta.name,
                             description: meta.description,

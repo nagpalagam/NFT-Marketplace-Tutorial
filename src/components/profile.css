@@ -1,0 +1,86 @@
+/* General Styles */
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif; /* You can change this to a Google Font */
+    background-color: #f0f2f5; /* Light background for contrast */
+}
+
+/* Profile Container */
+.profileClass {
+    max-width: 1200px; /* Limit the width of the profile */
+    margin: 0 auto; /* Center the profile */
+    padding: 20px; /* Add padding */
+    background-color: #ffffff; /* White background for the profile */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Title Styles */
+.text-center {
+    text-align: center;
+    margin-bottom: 20px; /* Space below the title */
+}
+
+h2 {
+    font-size: 24px; /* Larger font size for the title */
+    color: #333; /* Darker color for better readability */
+}
+
+p {
+    font-size: 16px; /* Standard font size for paragraphs */
+    color: #666; /* Gray color for less emphasis */
+}
+
+/* Loading and Error Messages */
+.text-red-500 {
+    color: #e53e3e; /* Red color for error messages */
+}
+
+/* NFT List Styles */
+.nfts-list {
+    display: grid; /* Use grid layout for the NFT tiles */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive grid */
+    gap: 20px; /* Space between tiles */
+    margin-top: 20px; /* Space above the NFT list */
+}
+
+/* NFT Tile Styles */
+.nft-tile {
+    background-color: #f9f9f9; /* Light background for each tile */
+    border-radius: 10px; /* Rounded corners */
+    padding: 15px; /* Padding inside the tile */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+    transition: transform 0.2s; /* Smooth transition for hover effect */
+}
+
+.nft-tile:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+}
+
+/* NFT Image Styles */
+.nft-tile img {
+    width: 100%; /* Make the image responsive */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 10px; /* Rounded corners for images */
+}
+
+/* NFT Title and Description Styles */
+.nft-tile h3 {
+    font-size: 18px; /* Font size for NFT name */
+    color: #333; /* Dark color for better readability */
+    margin: 10px 0; /* Space above and below the title */
+}
+
+.nft-tile p {
+    margin: 5px 0; /* Space between paragraphs */
+}
+
+/* Owner and Seller Styles */
+.text-gray-300 {
+    color: #a0aec0; /* Gray color for less emphasis */
+}
+
+/* Yellow text for ETH value */
+.text-yellow-500 {
+    color: #ecc94b; /* Use a standard yellow shade */
+}

@@ -1,20 +1,35 @@
-.App {
-  text-align: center;
+/* General Styles */
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif; /* Consider using a Google Font */
+  background: linear-gradient(135deg, #282c34, #3a3f47);
+  color: #ffffff;
 }
 
+/* App Container */
+.App {
+  text-align: center;
+  padding: 20px;
+}
+
+/* Logo Styles */
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+  border-radius: 50%; /* Rounded logo */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Shadow for depth */
 }
 
+/* Animation for Logo */
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
 }
 
+/* Header Styles */
 .App-header {
-  background-color: #282c34;
+  background-color: rgba(40, 44, 52, 0.9); /* Slightly transparent background */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -22,17 +37,39 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  padding: 20px;
+  border-radius: 10px; /* Rounded corners */
 }
 
+/* Link Styles */
 .App-link {
   color: #61dafb;
+  text-decoration: none; /* Remove underline */
+  transition: color 0.3s ease; /* Smooth transition */
 }
 
+.App-link:hover {
+  color: #21a1f1; /* Change color on hover */
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Glow effect */
+}
+
+/* Keyframes for Logo Spin */
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .App-header {
+    font-size: calc(8px + 2vmin); /* Adjust font size for smaller screens */
+  }
+
+  .App-logo {
+    height: 30vmin; /* Smaller logo on mobile */
   }
 }

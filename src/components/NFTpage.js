@@ -38,6 +38,7 @@ export default function NFTPage() {
   
       let meta = await axios.get(tokenURI);
       console.log("Fetched metadata:", meta.data);
+      console.log("owner:-", data.owner);
   
       const listedToken = await contract.getListedTokenForId(tokenId);
       console.log("listedToken", listedToken);

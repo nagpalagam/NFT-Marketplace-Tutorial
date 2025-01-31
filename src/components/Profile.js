@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import MarketplaceJSON from "../Marketplace.json";
@@ -103,10 +104,16 @@ export default function Profile() {
           <h2 className="font-bold text-xl">Wallet Address</h2>
           <p>{walletAddress}</p>
         </div>
-
+  
         {loading && <p>Loading your NFTs...</p>}
         {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-
+  
+        {/* Added Current Price Section */}
+        <div className="text-center">
+          <h2 className="font-bold text-xl">NFT Profile</h2>
+          <p>Current Price: <span className="text-yellow-500">1 ETH = $3,000</span></p>
+        </div>
+  
         <div className="nfts-list">
           {nfts.length === 0 && !loading && <p>No NFTs found for this wallet.</p>}
           
@@ -115,11 +122,11 @@ export default function Profile() {
               <img src={nft.image || "/fallback-image.png"} alt={nft.name} />
               <h3>{nft.name}</h3>
               <p>{nft.description}</p>
-              <p>{nft.price} ETH</p>
+              <p className="text-yellow-500">{nft.price} ETH</p> {/* Optional: Style NFT price in yellow */}
             </div>
           ))}
         </div>
       </div>
     </div>
-  );
+  )
 }
