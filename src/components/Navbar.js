@@ -1,4 +1,4 @@
-import logo from '../logo_3.png';
+import logo from './logo_2.png';
 import fullLogo from '../full_logo.png';
 import {
   BrowserRouter as Router,
