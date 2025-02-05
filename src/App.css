@@ -72,4 +72,64 @@ body {
   .App-logo {
     height: 30vmin; /* Smaller logo on mobile */
   }
+
+  @keyframes text-glow {
+    0% { text-shadow: 0 0 10px rgba(34, 211, 238, 0.5); }
+    50% { text-shadow: 0 0 20px rgba(168, 85, 247, 0.7); }
+    100% { text-shadow: 0 0 10px rgba(34, 211, 238, 0.5); }
+}
+
+.animate-text-glow {
+    animation: text-glow 3s ease-in-out infinite;
+}
+
+.bg-grid-pattern {
+    background-image: radial-gradient(circle at center, rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+
+.hover\:shadow-cyber:hover {
+    box-shadow: 0 0 30px rgba(34, 211, 238, 0.2),
+                0 0 20px rgba(168, 85, 247, 0.2),
+                inset 0 0 15px rgba(255,255,255,0.1);
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0px); }
+}
+
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float-particles {
+  0% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-20px) translateX(20px); }
+  100% { transform: translateY(0) translateX(0); }
+}
+
+.animate-float-particles {
+  animation: float-particles 15s ease-in-out infinite;
+}
+
+.shadow-cyber-glow {
+  box-shadow: 0 0 25px rgba(34, 211, 238, 0.3),
+              0 0 15px rgba(168, 85, 247, 0.3);
+}
+
+.hover\:shadow-cyber-glow-lg:hover {
+  box-shadow: 0 0 35px rgba(34, 211, 238, 0.4),
+              0 0 25px rgba(168, 85, 247, 0.4);
+}
+
+.bg-particle-pattern {
+  background-image: radial-gradient(circle at center, 
+      rgba(34, 211, 238, 0.1) 1px, 
+      transparent 1px
+  );
+  background-size: 30px 30px;
+}
+
 }

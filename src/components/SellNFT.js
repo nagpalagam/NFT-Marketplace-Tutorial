@@ -9,22 +9,8 @@ export default function SellNFT() {
   const [formParams, updateFormParams] = useState({ name: "", description: "", price: "" });
   const [fileURL, setFileURL] = useState(null);
   const [message, updateMessage] = useState("");
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false); // State for button disabled
   const location = useLocation();
-
-  // Disable and enable button logic
-  async function disableButton() {
-    const listButton = document.getElementById("list-button");
-    listButton.disabled = true;
-    listButton.style.backgroundColor = "grey";
-    listButton.style.opacity = "0.3";
-  }
-
-  async function enableButton() {
-    const listButton = document.getElementById("list-button");
-    listButton.disabled = false;
-    listButton.style.backgroundColor = "#A500FF";
-    listButton.style.opacity = "1";
-  }
 
   // Handle file upload
   async function OnChangeFile(e) {
@@ -32,19 +18,19 @@ export default function SellNFT() {
     if (!file) return;
 
     try {
-      disableButton();
+      setIsButtonDisabled(true); // Disable button
       updateMessage("Uploading image.. please don't click anything!");
       const response = await uploadFileToIPFS(file);
       if (response.success === true) {
-        enableButton();
+        setIsButtonDisabled(false); // Enable button
         updateMessage("");
         setFileURL(response.pinataURL);
       } else {
-        enableButton();
+        setIsButtonDisabled(false); // Enable button
         updateMessage("Failed to upload image: " + response.message);
       }
     } catch (e) {
-      enableButton();
+      setIsButtonDisabled(false); // Enable button
       updateMessage("Error during file upload: " + e.message);
     }
   }
@@ -87,7 +73,7 @@ export default function SellNFT() {
       }
 
       const signer = provider.getSigner();
-      disableButton();
+      setIsButtonDisabled(true); // Disable button
       updateMessage("Uploading NFT (takes 5 mins).. please don't click anything!");
 
       // Hardcode the contract address
@@ -110,7 +96,7 @@ export default function SellNFT() {
       await transaction.wait();
 
       alert("Successfully listed your NFT! Please check your wallet for the transaction.");
-      enableButton();
+      setIsButtonDisabled(false); // Enable button
       updateMessage("NFT listing successful!");
       updateFormParams({ name: "", description: "", price: "" });
       window.location.replace("/");
@@ -119,75 +105,111 @@ export default function SellNFT() {
       const errorMessage = e?.data?.message || e?.message || "An unknown error occurred";
       alert("Upload error: " + errorMessage);
       updateMessage("Upload error: " + errorMessage);
-      enableButton();
+      setIsButtonDisabled(false); // Enable button
     }
   }
 
   return (
-    <div>
-      <Navbar />
-      <div className="flex flex-col place-items-center mt-10" id="nftForm">
-        <form className="bg-white shadow-md rounded px-8 pt-4 pb-8 mb-4">
-          <h3 className="text-center font-bold text-purple-500 mb-8">
-            Upload your NFT to the marketplace
-          </h3>
-          <div className="mb-4">
-            <label className="block text-purple-500 text-sm font-bold mb-2" htmlFor="name">
-              NFT Name
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="name"
-              type="text"
-              placeholder="Axie#4563"
-              onChange={(e) => updateFormParams({ ...formParams, name: e.target.value })}
-              value={formParams.name}
-            />
-          </div>
-          <div className="mb-6">
-            <label className="block text-purple-500 text-sm font-bold mb-2" htmlFor="description">
-              NFT Description
-            </label>
-            <textarea
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              cols={40}
-              rows={5}
-              id="description"
-              placeholder="Axie Infinity Collection"
-              value={formParams.description}
-              onChange={(e) => updateFormParams({ ...formParams, description: e.target.value })}
-            ></textarea>
-          </div>
-          <div className="mb-6">
-            <label className="block text-purple-500 text-sm font-bold mb-2" htmlFor="price">
-              Price (in ETH)
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              type="number"
-              placeholder="Min 0.01 ETH"
-              step="0.01"
-              value={formParams.price}
-              onChange={(e) => updateFormParams({ ...formParams, price: e.target.value })}
-            />
-          </div>
-          <div>
-            <label className="block text-purple-500 text-sm font-bold mb-2" htmlFor="image">
-              Upload Image
-            </label>
-            <input type="file" onChange={OnChangeFile} />
-          </div>
-          <br />
-          <div className="text-red-500 text-center">{message}</div>
-          <button
-            onClick={listNFT}
-            className="font-bold mt-10 w-full bg-purple-500 text-white rounded p-2 shadow-lg"
-            id="list-button"
-          >
-            List NFT
-          </button>
-        </form>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-space-900 to-galaxy-900">
+        <Navbar />
+        
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div className="glass-container relative p-8 rounded-3xl border border-stellar-border/30 backdrop-blur-xl">
+                {/* Floating particles background */}
+                <div className="absolute inset-0 bg-particle-pattern opacity-20 animate-float-particles pointer-events-none" />
+                
+                <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 mb-8 text-center animate-text-glow">
+                    ✨ Mint New NFT
+                </h3>
+
+                <form className="space-y-8 relative z-10">
+                    {/* NFT Name Field */}
+                    <div className="cosmic-input-group">
+                        <label className="text-cyan-300 text-sm font-semibold mb-2 block">
+                            NFT Name
+                        </label>
+                        <input
+                            className="w-full bg-galaxy-100/80 border border-stellar-border/40 rounded-xl py-3 px-4 text-gray-900 placeholder-stellar-gray/50 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 transition-all"
+                            type="text"
+                            placeholder="Quantum Axie #001"
+                            onChange={(e) => updateFormParams({ ...formParams, name: e.target.value })}
+                            value={formParams.name}
+                        />
+                    </div>
+
+                    {/* Description Field */}
+                    <div className="cosmic-input-group">
+                        <label className="text-cyan-300 text-sm font-semibold mb-2 block">
+                            NFT Description
+                        </label>
+                        <textarea
+                            className="w-full bg-galaxy-100/80 border border-stellar-border/40 rounded-xl py-3 px-4 text-gray-900 placeholder-stellar-gray/50 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 h-32 resize-none transition-all"
+                            placeholder="Describe your digital masterpiece..."
+                            value={formParams.description}
+                            onChange={(e) => updateFormParams({ ...formParams, description: e.target.value })}
+                        />
+                    </div>
+
+                    {/* Price Field */}
+                    <div className="cosmic-input-group">
+                        <label className="text-cyan-300 text-sm font-semibold mb-2 block">
+                            Price (ETH)
+                        </label>
+                        <div className="relative">
+                            <input
+                                className="w-full bg-galaxy-100/80 border border-stellar-border/40 rounded-xl py-3 px-4 text-gray-900 placeholder-stellar-gray/50 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 pr-16 transition-all"
+                                type="number"
+                                step="0.01"
+                                placeholder="0.01"
+                                value={formParams.price}
+                                onChange={(e) => updateFormParams({ ...formParams, price: e.target.value })}
+                            />
+                            <span className="absolute right-4 top-3 text-stellar-gray/50">ETH</span>
+                        </div>
+                    </div>
+
+                    {/* File Upload */}
+                    <div className="cosmic-input-group">
+                        <label className="text-cyan-300 text-sm font-semibold mb-2 block">
+                            NFT Artwork
+                        </label>
+                        <div className="relative group">
+                            <div className="h-32 flex items-center justify-center border-2 border-dashed border-stellar-border/40 rounded-xl bg-galaxy-100/30 hover:border-cyan-400/60 transition-all cursor-pointer">
+                                <input 
+                                    type="file" 
+                                    onChange={OnChangeFile} 
+                                    className="opacity-0 absolute inset-0 w-full h-full cursor-pointer" 
+                                />
+                                <div className="text-center space-y-2">
+                                    <div className="text-2xl">📤</div>
+                                    <p className="text-stellar-gray/60 group-hover:text-cyan- 400/80 transition-colors">
+                                        Drag & drop or click to upload
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Status Message */}
+                    {message && (
+                        <div className="text-center py-3 px-4 bg-red-900/20 border border-red-400/30 rounded-xl text-red-400 animate-pulse">
+                            {message}
+                        </div>
+                    )}
+
+                    {/* Submit Button */}
+                    <button
+                        onClick={listNFT}
+                        id="list-button" // Added ID for the button
+                        className={`w-full py-4 px-6 ${isButtonDisabled ? 'bg-gray-500 opacity-50' : 'bg-gradient-to-r from-cyan-500/80 to-purple-500/80 hover:from-cyan-400 hover:to-purple-400'} text-white font-bold rounded-xl transition-all transform hover:scale-[1.02] shadow-cyber-glow hover:shadow-cyber-glow-lg`}
+                        type="button"
+                        disabled={isButtonDisabled} // Disable button based on state
+                    >
+                        🚀 Mint NFT
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
-  );
+);
 }

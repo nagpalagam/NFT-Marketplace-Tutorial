@@ -5,7 +5,7 @@ async function createToken() {
   const MyContract = await ethers.getContractFactory("NFTMarketplace");
   const contract = await MyContract.attach(Marketplace.address);
 
-  const tokenURI = "https://example.com/token/1"; // Replace with actual token URI
+  const tokenURI = ""; // Replace with actual token URI
   const price = ethers.utils.parseEther("0.1"); // Set a price for the token
 
   const tx = await contract.createToken(tokenURI, price, { value: ethers.utils.parseEther("0.01") });

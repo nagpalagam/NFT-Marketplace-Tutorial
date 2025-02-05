@@ -11,14 +11,13 @@ export default function Profile() {
   const [walletAddress, setWalletAddress] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [totalValue, setTotalValue] = useState(0); // Added total value state
+  const [totalValue, setTotalValue] = useState(0);
 
   const CONTRACT_ADDRESS = "0x6AeD57D577542A04646eA9b1780adB6288768242";
 
-  // Calculate total value when NFTs change
   useEffect(() => {
     const calculateTotalValue = () => {
-      const ethPrice = 3000; // USD per ETH
+      const ethPrice = 3000;
       const totalETH = nfts.reduce((acc, nft) => {
         const price = parseFloat(nft.price) || 0;
         return acc + price;
@@ -82,56 +81,64 @@ export default function Profile() {
   }, []);
 
   return (
-    <div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-space-900 to-galaxy-900">
       <Navbar />
-      <div className="profileClass">
-        <div className="text-center">
-          <h2 className="font-bold text-xl">Wallet Address</h2>
-          <p className="break-words">{walletAddress}</p>
-        </div>
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="glass-container relative p-8 rounded-3xl border border-stellar-border/30 backdrop-blur-xl">
+          <div className="absolute inset-0 bg-particle-pattern opacity-20 animate-float-particles pointer-events-none" />
 
-        {loading && <p className="text-center">Loading your NFTs...</p>}
-        {errorMessage && <p className="text-red-500 text-center">{errorMessage}</p>}
-        
-        {/* Total Value Display */}
-        <div className="text-center my-4 p-4 bg-gray-100 rounded-lg border-2 border-yellow-200">
-          <h2 className="font-bold text-xl mb-2">Total NFT Value</h2>
-          <p className="text-lg">
-            <span className="text-yellow-500 font-semibold">
-              ${totalValue} USD
-            </span>
-            <span className="block text-sm text-yellow-600 mt-1">
-              ({(totalValue / 3000).toFixed(2)} ETH)
-            </span>
-          </p>
-        </div>
+          <div className="text-center mb-8">
+            <h2 className="font-bold text-3xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
+              Wallet Address
+            </h2>
+            <p className="break-words text-gray-100">{walletAddress}</p>
+          </div>
 
-        <div className="text-center mb-4">
-          <h2 className="font-bold text-xl">NFT Profile</h2>
-          <p>Current Price: <span className="text-yellow-500">1 ETH = $3,000</span></p>
-        </div>
-
-        <div className="nfts-list">
-          {nfts.length === 0 && !loading && (
-            <p className="text-center">No NFTs found for this wallet.</p>
-          )}
+          {loading && <p className="text-center text-gray-300">Loading your NFTs...</p>}
+          {errorMessage && <p className="text-red-500 text-center">{errorMessage}</p>}
           
-          {nfts.map((nft, index) => (
-            <div key={index} className="nft-tile">
-              <img 
-                src={nft.image || "/fallback-image.png"} 
-                alt={nft.name} 
-                className="h-48 w-full object-cover"
-              />
-              <div className="p-4">
-                <h3 className="font-semibold">{nft.name}</h3>
-                <p className="text-sm text-gray-600 mb-2">{nft.description}</p>
-                <p className="text-yellow-600 font-medium">{nft.price} ETH</p>
+          {/* Total Value Display */}
+<div className="text-center my-4 p-4 bg-gradient-to-br from-cyan-900/30 to-purple-900/30 rounded-lg border border-cyan-400/20 backdrop-blur-sm">
+  <h2 className="font-bold text-xl mb-2 text-cyan-300">Total NFT Value</h2>
+  <p className="text-lg">
+    <span className="text-cyan-400 font-semibold">
+      ${totalValue} USD
+    </span>
+    <span className="block text-sm text-purple-400 mt-1">
+      ({(totalValue / 3000).toFixed(2)} ETH)
+    </span>
+  </p>
+</div>
+
+          <div className="text-center mb-4">
+            <h2 className="font-bold text-xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
+              NFT Profile
+            </h2>
+            <p className="text-gray-300">Current Price: <span className="text-yellow-500">1 ETH = $3,000</span></p>
+          </div>
+
+          <div className="nfts-list">
+            {nfts.length === 0 && !loading && (
+              <p className="text-center text-gray-300">No NFTs found for this wallet.</p>
+            )}
+            
+            {nfts.map((nft, index) => (
+              <div key={index} className="nft-tile">
+                <img 
+                  src={nft.image || "/fallback-image.png"} 
+                  alt={nft.name} 
+                  className="h-48 w-full object-cover rounded-t-lg"
+                />
+                <div className="p-4 bg-gray-800 rounded-b-lg">
+                  <h3 className="font-semibold text-gray-100">{nft.name}</h3>
+                  <p className="text-sm text-gray-400 mb-2">{nft.description}</p>
+                  <p className="text-yellow-600 font-medium">{nft.price} ETH</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
