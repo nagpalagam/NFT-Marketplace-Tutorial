@@ -132,4 +132,29 @@ body {
   background-size: 30px 30px;
 }
 
+@keyframes underline {
+  0% { transform: scaleX(0); }
+  100% { transform: scaleX(1); }
+}
+
+.animate-underline {
+  animation: underline 0.3s ease-out forwards;
+}
+
+.hover\:shadow-cyber-glow:hover {
+  box-shadow: 0 0 15px rgba(34, 211, 238, 0.4),
+              0 0 10px rgba(168, 85, 247, 0.4);
+}
+
+/* Add to your global CSS */
+body {
+  padding-top: 6rem; /* 96px = 6rem (matches h-24) */
+}
+
+@media (min-width: 768px) {
+  body {
+    padding-top: 4rem; /* 64px = 4rem for desktop */
+  }
+}
+
 }

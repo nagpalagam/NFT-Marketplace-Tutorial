@@ -119,65 +119,68 @@ export default function Marketplace() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-space-900 to-galaxy-900">
-            <Navbar />
-            
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                {/* Header Section */}
-                <div className="text-center mb-20 space-y-6">
-                    <h1 className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 animate-text-glow">
-                        #NFT Marketplace
-                    </h1>
-                    <p className="text-xl text-stellar-gray">
-                        Explore the frontier of digital collectibles
-                    </p>
-                </div>
-
-                {/* Content Section */}
-                <div className="relative">
-                    {/* Grid Background Effect */}
-                    <div className="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none" />
-
-                    {loading ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {[1, 2, 3].map((_, index) => (
-                                <div key={index} className="animate-pulse h-[480px] rounded-2xl bg-galaxy-800/40 border border-stellar-border/30 backdrop-blur-lg">
-                                    <div className="h-60 bg-galaxy-700/30 rounded-t-2xl" />
-                                    <div className="p-6 space-y-4">
-                                        <div className="h-6 bg-galaxy-700/30 rounded w-3/4" />
-                                        <div className="h-4 bg-galaxy-700/30 rounded w-1/2" />
-                                        <div className="h-12 bg-galaxy-700/30 rounded-xl mt-4" />
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {data.map((nft, index) => (
-                                <NFTTile 
-                                    key={index}
-                                    data={nft}
-                                    className="transform transition-all duration-500 hover:scale-[1.02] hover:shadow-cyber"
-                                />
-                            ))}
-                        </div>
-                    )}
-
-                    {/* Empty State */}
-                    {!loading && data.length === 0 && (
-                        <div className="text-center py-24 space-y-6">
-                            <div className="text-3xl text-stellar-gray">
-                                🚀 The marketplace is currently empty
-                            </div>
-                            <div className="text-stellar-gray/70">
-                                Be the pioneer to launch your digital creation into the metaverse
-                            </div>
-                            <div className="animate-float">
-                                <div className="w-24 h-24 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-full mx-auto blur-xl" />
-                            </div>
-                        </div>
-                    )}
-                </div>
+          <Navbar />
+          
+          {/* Main Content Container */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12"> {/* Increased top padding */}
+            {/* Header Section */}
+            <div className="text-center mb-16 space-y-6"> {/* Reduced bottom margin */}
+              <h1 className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 animate-text-glow">
+                #NFT Marketplace
+              </h1>
+              <p className="text-xl text-stellar-gray mt-4"> {/* Added margin-top */}
+                Explore the frontier of digital collectibles
+              </p>
             </div>
+      
+            {/* Content Section */}
+            <div className="relative mt-8"> {/* Added top margin */}
+              {/* Grid Background Effect */}
+              <div className="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none" />
+      
+              {/* Loading State */}
+              {loading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {[1, 2, 3].map((_, index) => (
+                    <div key={index} className="animate-pulse h-[480px] rounded-2xl bg-galaxy-800/40 border border-stellar-border/30 backdrop-blur-lg">
+                      <div className="h-60 bg-galaxy-700/30 rounded-t-2xl" />
+                      <div className="p-6 space-y-4">
+                        <div className="h-6 bg-galaxy-700/30 rounded w-3/4" />
+                        <div className="h-4 bg-galaxy-700/30 rounded w-1/2" />
+                        <div className="h-12 bg-galaxy-700/30 rounded-xl mt-4" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                /* NFT Grid */
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {data.map((nft, index) => (
+                    <NFTTile 
+                      key={index}
+                      data={nft}
+                      className="transform transition-all duration-500 hover:scale-[1.02] hover:shadow-cyber"
+                    />
+                  ))}
+                </div>
+              )}
+      
+              {/* Empty State */}
+              {!loading && data.length === 0 && (
+                <div className="text-center py-24 space-y-6">
+                  <div className="text-3xl text-stellar-gray">
+                    🚀 The marketplace is currently empty
+                  </div>
+                  <div className="text-stellar-gray/70">
+                    Be the pioneer to launch your digital creation into the metaverse
+                  </div>
+                  <div className="animate-float">
+                    <div className="w-24 h-24 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-full mx-auto blur-xl" />
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-    );
-}
+      );
+    }

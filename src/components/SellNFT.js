@@ -1,15 +1,15 @@
 import Navbar from "./Navbar";
 import { useState } from "react";
 import { uploadFileToIPFS, uploadJSONToIPFS } from "../pinata";
-import MarketplaceABI from "../Marketplace.json"; // Import ABI from the JSON
+import MarketplaceABI from "../Marketplace.json"; 
 import { useLocation } from "react-router";
-import { ethers } from "ethers"; // Import ethers for easy contract interaction
+import { ethers } from "ethers"; 
 
 export default function SellNFT() {
   const [formParams, updateFormParams] = useState({ name: "", description: "", price: "" });
   const [fileURL, setFileURL] = useState(null);
   const [message, updateMessage] = useState("");
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false); // State for button disabled
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false); 
   const location = useLocation();
 
   // Handle file upload
@@ -18,11 +18,11 @@ export default function SellNFT() {
     if (!file) return;
 
     try {
-      setIsButtonDisabled(true); // Disable button
+      setIsButtonDisabled(true); 
       updateMessage("Uploading image.. please don't click anything!");
       const response = await uploadFileToIPFS(file);
       if (response.success === true) {
-        setIsButtonDisabled(false); // Enable button
+        setIsButtonDisabled(false); 
         updateMessage("");
         setFileURL(response.pinataURL);
       } else {
@@ -119,7 +119,7 @@ export default function SellNFT() {
                 <div className="absolute inset-0 bg-particle-pattern opacity-20 animate-float-particles pointer-events-none" />
                 
                 <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 mb-8 text-center animate-text-glow">
-                    ✨ Mint New NFT
+                     Mint New NFT
                 </h3>
 
                 <form className="space-y-8 relative z-10">
@@ -131,7 +131,7 @@ export default function SellNFT() {
                         <input
                             className="w-full bg-galaxy-100/80 border border-stellar-border/40 rounded-xl py-3 px-4 text-gray-900 placeholder-stellar-gray/50 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 transition-all"
                             type="text"
-                            placeholder="Quantum Axie #001"
+                            placeholder="um Axie #001"
                             onChange={(e) => updateFormParams({ ...formParams, name: e.target.value })}
                             value={formParams.name}
                         />
