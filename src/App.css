@@ -158,3 +158,6 @@ body {
 }
 
 }
+.glow {
+  text-shadow: 0 0 8px rgba(255, 223, 0, 0.7), 0 0 15px rgba(255, 223, 0, 0.5);
+}

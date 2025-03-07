@@ -6,17 +6,71 @@ import {
   useLocation
 } from "react-router-dom";
 import { useEffect, useState } from 'react';
+import Web3 from "web3";
+import Web3Modal from "web3modal";
+import WalletConnectProvider from "@walletconnect/web3-provider"; // For WalletConnect support
+
+// Provider options for Web3Modal
+const providerOptions = {
+  walletconnect: {
+    package: WalletConnectProvider, // Use WalletConnect provider
+    options: {
+      infuraId: "93f07f7c79e84ab88be55d163eca9a57", // Your Infura Project ID
+      network: "sepolia", // Use Sepolia testnet
+    },
+  },
+  // Add other providers like MetaMask, etc., if needed
+};
+
+const web3Modal = new Web3Modal({
+  network: "sepolia", // Set the default network to Sepolia
+  cacheProvider: true, // Optional: Cache the provider for reconnection
+  providerOptions, // Pass the provider options
+});
+
 function Navbar() {
   const [connected, toggleConnect] = useState(false); // Tracks wallet connection status
   const [currAddress, updateAddress] = useState('0x'); // Stores connected wallet address
   const location = useLocation();
 
-  // Function to handle wallet connection
+  // Function to handle wallet connection and disconnection
   async function connectWallet() {
-    if (window.ethereum) {
+    if (connected) {
+      // Disconnect wallet
+      await web3Modal.clearCachedProvider(); // Clear the cached provider
+      toggleConnect(false); // Set connected status to false
+      updateAddress('0x'); // Reset the wallet address
+      localStorage.removeItem('connectedWallet'); // Remove wallet address from localStorage
+      console.log('Wallet disconnected');
+    } else {
+      // Connect wallet
       try {
-        // Request accounts from the user's wallet
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const provider = await web3Modal.connect();
+        const web3 = new Web3(provider);
+
+        // Subscribe to provider events
+        provider.on("accountsChanged", (accounts) => {
+          console.log("Accounts changed:", accounts);
+          updateAddress(accounts[0] || '0x');
+        });
+
+        provider.on("chainChanged", (chainId) => {
+          console.log("Chain ID changed:", chainId);
+          // Reload the page if the chain changes
+          window.location.reload();
+        });
+
+        provider.on("connect", (info) => {
+          console.log("Connected:", info);
+        });
+
+        provider.on("disconnect", (error) => {
+          console.log("Disconnected:", error);
+          toggleConnect(false);
+          updateAddress('0x');
+        });
+
+        const accounts = await web3.eth.getAccounts();
         const walletAddress = accounts[0];
         updateAddress(walletAddress); // Update the state with the connected account
         toggleConnect(true); // Set connected status to true
@@ -25,8 +79,6 @@ function Navbar() {
       } catch (error) {
         console.error('Error connecting wallet:', error);
       }
-    } else {
-      alert('MetaMask not detected. Please install MetaMask.');
     }
   }
 
@@ -43,7 +95,8 @@ function Navbar() {
     <div className="fixed w-full top-0 z-50">
       <nav className="bg-gradient-to-r from-gray-900/90 to-space-900/90 backdrop-blur-xl border-b border-stellar-border/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          {/* Flex container for horizontal layout */}
+          <div className="flex flex-row items-center justify-between h-16">
             {/* Left Section - Logo */}
             <div className="flex-shrink-0 flex items-center space-x-4">
               <Link to="/" className="flex items-center group">
@@ -59,10 +112,10 @@ function Navbar() {
             </div>
 
             {/* Center Section - Navigation Links */}
-            <div className="hidden md:flex items-center space-x-8">
+            <div className="flex flex-row items-center space-x-4 md:space-x-8">
               <Link 
                 to="/" 
-                className={`relative px-3 py-2 text-lg font-medium ${
+                className={`relative px-3 py-2 text-sm md:text-lg font-medium ${
                   location.pathname === "/" 
                     ? "text-cyan-400" 
                     : "text-gray-300 hover:text-white"
@@ -76,7 +129,7 @@ function Navbar() {
 
               <Link 
                 to="/sellNFT" 
-                className={`relative px-3 py-2 text-lg font-medium ${
+                className={`relative px-3 py-2 text-sm md:text-lg font-medium ${
                   location.pathname === "/sellNFT" 
                     ? "text-cyan-400" 
                     : "text-gray-300 hover:text-white"
@@ -90,7 +143,7 @@ function Navbar() {
 
               <Link 
                 to="/profile" 
-                className={`relative px-3 py-2 text-lg font-medium ${
+                className={`relative px-3 py-2 text-sm md:text-lg font-medium ${
                   location.pathname === "/profile" 
                     ? "text-cyan-400" 
                     : "text-gray-300 hover:text-white"
@@ -104,16 +157,16 @@ function Navbar() {
             </div>
 
             {/* Right Section - Wallet */}
-            <div className="flex items-center space-x-4">
+            <div className="flex flex-row items-center space-x-4">
               <button
                 onClick={connectWallet}
-                className={`px-6 py-2 rounded-xl font-bold transition-all duration-300 ${
+                className={`px-4 py-2 md:px-6 md:py-2 rounded-xl font-bold transition-all duration-300 ${
                   connected
-                    ? "bg-gradient-to-r from-green-500 to-emerald-600 cursor-default"
-                    : "bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 hover:shadow-cyber-glow"
+                    ? "bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-400 hover:to-pink-500" // Disconnect button style
+                    : "bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 hover:shadow-cyber-glow" // Connect button style
                 }`}
               >
-                {connected ? "✅ Connected" : "Connect Wallet"}
+                {connected ? "Disconnect" : "Connect Wallet"}
               </button>
 
               {currAddress !== "0x" && (

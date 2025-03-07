@@ -18,6 +18,7 @@ export default function NFTPage() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [currentAddress, setCurrentAddress] = useState("");
+  const [error, setError] = useState(""); // New state for error messages
   
   const { tokenId } = useParams();
   const CONTRACT_ADDRESS = "0x6AeD57D577542A04646eA9b1780adB6288768242";
@@ -85,23 +86,53 @@ export default function NFTPage() {
         MarketplaceJSON.abi,
         signer
       );
-
+  
+      // Check user's balance before proceeding
+      const userBalance = await signer.getBalance();
+      const requiredAmount = ethers.utils.parseUnits(nftData.price, "ether");
+      const gasEstimate = await contract.estimateGas.executeSale(tokenId, {
+        value: requiredAmount
+      });
+      const gasPrice = await provider.getGasPrice();
+      const totalCost = gasEstimate.mul(gasPrice).add(requiredAmount);
+  
+      if (userBalance.lt(totalCost)) {
+        setError("Insufficient funds for gas + NFT price.");
+        return;
+      }
+  
       setMessage("Processing transaction...");
       const tx = await contract.executeSale(tokenId, {
-        value: ethers.utils.parseUnits(nftData.price, "ether")
+        value: requiredAmount
       });
       
       await tx.wait();
       setMessage("Purchase successful! Updating details...");
       await fetchNFTData(); // Refresh data after purchase
       setMessage("");
+      setError(""); // Clear any previous errors
       
     } catch (error) {
       console.error("Purchase Error:", error);
-      setMessage(error.message || "Transaction failed");
+      let errorMessage = "Transaction failed";
+      
+      // Handle different error types
+      if (error.code === 4001) {
+        errorMessage = "Transaction canceled by user";
+      } else if (error?.data?.message?.includes("reverted")) {
+        // Extract revert reason from contract error
+        const revertReason = error.data.message.split("reverted: ")[1];
+        errorMessage = revertReason || "Contract execution failed";
+      } else if (error.message?.includes("insufficient funds")) {
+        errorMessage = "Insufficient ETH balance for transaction";
+      } else if (error.message?.includes("gas")) {
+        console.log(error.m);
+      }
+  
+      setError(errorMessage);
+      setMessage("");
     }
   }
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
@@ -113,82 +144,91 @@ export default function NFTPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-gray-900 flex flex-col">
       <Navbar />
-      
-      <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Image Preview */}
-          <div className="relative group rounded-2xl overflow-hidden shadow-2xl">
-            <img
-              src={nftData.image}
-              alt="NFT Artwork"
-              className="w-full h-96 object-contain bg-gray-800"
-              onError={(e) => {
-                e.target.onerror = null; 
-                e.target.src = "placeholder-image-url";
-              }}
-            />
-          </div>
-
-          {/* Details Card */}
-          <div className="bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-gray-700">
-            <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 mb-6">
-              {nftData.name}
-            </h1>
-
-            <div className="space-y-6">
-              <p className="text-gray-300 text-lg leading-relaxed">
-                {nftData.description}
-              </p>
-
-              <div className="space-y-4">
-                <div className="flex justify-between items-center p-4 bg-gray-900/50 rounded-xl">
-                  <span className="text-gray-400">Price</span>
-                  <span className="text-2xl font-bold text-blue-400">
-                    {nftData.price} ETH
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 bg-gray-900/50 rounded-xl">
-                    <div className="text-sm text-gray-400 mb-1">Owner</div>
-                    <div className="text-yellow-400 font-mono truncate">
-                      {nftData.owner}
+  
+      {/* Centered Content */}
+      <div className="flex-1 flex items-center justify-center">
+        <div className="max-w-6xl w-full px-4 py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Image Preview */}
+            <div className="relative group rounded-2xl overflow-hidden shadow-2xl">
+              <img
+                src={nftData.image}
+                alt="NFT Artwork"
+                className="w-full h-96 object-contain bg-gray-800"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "placeholder-image-url";
+                }}
+              />
+            </div>
+  
+            {/* Details Card */}
+            <div className="bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-gray-700">
+              <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 mb-6">
+                {nftData.name}
+              </h1>
+  
+              <div className="space-y-6">
+                <p className="text-gray-300 text-lg leading-relaxed">
+                  {nftData.description}
+                </p>
+  
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center p-4 bg-gray-900/50 rounded-xl">
+                    <span className="text-gray-400">Price</span>
+                    <span className="text-2xl font-bold text-blue-400">
+                      {nftData.price} ETH
+                    </span>
+                  </div>
+  
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="p-4 bg-gray-900/50 rounded-xl">
+                      <div className="text-sm text-gray-400 mb-1">Owner</div>
+                      <div className="text-yellow-400 font-mono truncate">
+                        {nftData.owner}
+                      </div>
+                    </div>
+                    <div className="p-4 bg-gray-900/50 rounded-xl">
+                      <div className="text-sm text-gray-400 mb-1">Seller</div>
+                      <div className="text-yellow-400 font-mono truncate">
+                        {nftData.seller}
+                      </div>
                     </div>
                   </div>
-                  <div className="p-4 bg-gray-900/50 rounded-xl">
-                    <div className="text-sm text-gray-400 mb-1">Seller</div>
-                    <div className="text-yellow-400 font-mono truncate">
-                      {nftData.seller}
-                    </div>
-                  </div>
                 </div>
+  
+                {currentAddress && (
+                  <div className="pt-4">
+                    {currentAddress !== nftData.owner && currentAddress !== nftData.seller ? (
+                      <>
+                        {error && (
+                          <div className="text-red-400 text-sm mb-4">
+                            {error}
+                          </div>
+                        )}
+                        <button
+                          onClick={buyNFT}
+                          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold py-4 px-8 rounded-xl transition-all duration-200 hover:shadow-xl disabled:opacity-50"
+                          disabled={!!message}
+                        >
+                          {message ? message : "Buy Now"}
+                        </button>
+                      </>
+                    ) : (
+                      <div className="text-center p-4 bg-emerald-900/30 rounded-xl border border-emerald-400/20 text-emerald-400">
+                        {currentAddress === nftData.owner
+                          ? "You own this NFT"
+                          : "You listed this NFT"}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
-
-              {currentAddress && (
-                <div className="pt-4">
-                  {currentAddress !== nftData.owner && currentAddress !== nftData.seller ? (
-                    <button
-                      onClick={buyNFT}
-                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold py-4 px-8 rounded-xl transition-all duration-200 hover:shadow-xl disabled:opacity-50"
-                      disabled={!!message}
-                    >
-                      {message ? message : "Buy Now"}
-                    </button>
-                  ) : (
-                    <div className="text-center p-4 bg-emerald-900/30 rounded-xl border border-emerald-400/20 text-emerald-400">
-                      {currentAddress === nftData.owner 
-                        ? "You own this NFT"
-                        : "You listed this NFT"}
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
           </div>
         </div>
       </div>
     </div>
-  );
-}
+  );}
